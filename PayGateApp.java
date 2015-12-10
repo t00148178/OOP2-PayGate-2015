@@ -23,7 +23,7 @@ public class PayGateApp extends JFrame implements ActionListener {
 	
 	private JMenuBar jMenuBar;
 	private JMenu fileMenu,accountMenu;
-	private JMenuItem quit,save,open,sendMoney,requestMoney,depositMoney;
+	private JMenuItem quit,sendMoney,requestMoney,depositMoney;
 	private JButton depositButton;
 	private JLabel initMessage; 		
 	private JTextField jTextField;		
@@ -95,6 +95,13 @@ public class PayGateApp extends JFrame implements ActionListener {
 		
 		jMenuBar.add(fileMenu);
 		jMenuBar.add(accountMenu);	
+			
+		accDetailsResult = new JTextArea(10,10);
+		cp.add(accDetailsResult);
+		accDetailsResult.setVisible(false);
+		
+		
+		
 		
 		jTextField = new JTextField(5);
 		this.setVisible(false);
@@ -129,22 +136,34 @@ public class PayGateApp extends JFrame implements ActionListener {
 	    	    
 	    String searchAcc= JOptionPane.showInputDialog("Account name: ");
 	    while(it.hasNext()&&!found) {
-	    	selectedAccount=it.next();
+	    	selectedAccount=it.next();    
+	    
+		    	if(selectedAccount.getUser().getAccountName().equals(searchAcc)){
+		    		
+		    		useracc=selectedAccount;
+		    		found = true;		    		
+		    		
+		    		System.out.println(useracc.getUser().getAccountName()+ ": " + found);    		
+		    		
+		    		
+		    	} else {
+		    		
+		    		JOptionPane.showMessageDialog(null,"Account not found");
+		    		
+		    	}
 	    	
-	    	if(selectedAccount.getUser().getAccountName().equals(searchAcc)){
-	    		useracc=selectedAccount;
-	    		found = true;
-	    		
-	    		System.out.println(useracc.getUser().getAccountName()+ ": " + found);
-	    		
-	    	} else {
-	    		System.out.println("Account not found");
-	    	}	    	    
+	    	    
 	    }
 	    ois.close();  
 	        
 	}	
 		
+
+	/*
+	 * this method will dipslay initial message
+	 * with user account details
+	 * 
+	 */	
 	public static String displayInitMessage() {		
 		String userName = useracc.getUser().getAccountName();
 		float userBalance = useracc.getUser().getBalance();
@@ -164,6 +183,9 @@ public class PayGateApp extends JFrame implements ActionListener {
 		return message;
 	}	
 	
+	/*
+	 * Admin JFrame 
+	 */		
 	public static void adminJFrame() {
 		JFrame jFrame = new JFrame("Admin");		
 		jFrame.setVisible(true);	
@@ -179,6 +201,12 @@ public class PayGateApp extends JFrame implements ActionListener {
 	private void depositMoney(float amount) {		
 		useracc.getUser().topUp(amount);
 	}
+	
+	/*
+	 * 
+	 * this method will create an account for user
+	 * 
+	 */	
 	
 	private static void createAccount(){		
 		try {
@@ -212,9 +240,6 @@ public class PayGateApp extends JFrame implements ActionListener {
 		if(e.getActionCommand().equals("Quit")) {
 			JOptionPane.showMessageDialog(null, "System exits");
 			System.exit(0);
-		} else if(e.getActionCommand().equals("Open")) {
-			
-		} else if(e.getActionCommand().equals("Save")) {
 			
 		} else if(e.getActionCommand().equals("Send Money")) {
 			
@@ -272,6 +297,11 @@ public class PayGateApp extends JFrame implements ActionListener {
 		
 	}
 	
+	/*
+	 * 
+	 * load user details from accounts.dat file
+	 * 
+	 */		
 	public static void loadUser() throws Exception {
 		JOptionPane.showMessageDialog(null, "opening...");
 	    ObjectInputStream ois;    
@@ -294,6 +324,7 @@ public class PayGateApp extends JFrame implements ActionListener {
 	    fis.close();
 	}
 	
+/*
 	public static void saveUser() throws Exception {
 		JOptionPane.showMessageDialog(null, "saving...");
 	    ObjectOutputStream os;
@@ -304,18 +335,12 @@ public class PayGateApp extends JFrame implements ActionListener {
 	    os.close();
 	    fos.close();
 	}
-	
+	*/
 	private void fileMenu() {	
 		fileMenu = new JMenu("File");		
 		quit = new JMenuItem("Quit");
 		quit.addActionListener(this);
-		open = new JMenuItem("Open");
-		open.addActionListener(this);
-		save = new JMenuItem("save");
-		save.addActionListener(this);
-		
-		fileMenu.add(open);
-		fileMenu.add(save);
+
 		fileMenu.add(quit);				
 	}
 	
